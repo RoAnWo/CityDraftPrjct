@@ -144,7 +144,7 @@ def main():
     gui = window.dat.GUI.new()
     param_folder = gui.addFolder('Parameters')
     param_folder.add(geom1_params, 'size', 5,30,1)
-    param_folder.add(geom1_params, 'amount', 1,15,1)
+    param_folder.add(geom1_params, 'amount', 1,10,1)
     param_folder.add(geom1_params,"x", -150,400,10)
     param_folder.add(geom1_params,"y", -150,400,10)
     param_folder.add(geom1_params,"z", -150,400,10)
