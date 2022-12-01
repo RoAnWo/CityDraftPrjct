@@ -14,9 +14,9 @@
             <a href="/" class="nav-link">
 				HOME</a>
 			<a href="./" class="nav-link">
-				TITLE1</a>
+				Disintegrating Cube</a>
 			<a href="../title_2" class="nav-link">
-				TITLE2</a>
+				Mutable Koch-Snowflake</a>
 		</nav>
 
         <main id="main-doc">
@@ -28,7 +28,14 @@
                     Project Description
                 </header>
                 <p>
-                    Please explain about your project here and put an image that shows some design iterations like the one below. Note that it needs to be one single image. Please combine some shots from different design iterations. The following text is only a random example. This geometry consists of rectangles spaced 1m apart along the x-axis. The rectangles have the same height and width but their orientation angle changes by a total of 90 degrees along the length of the resulting geometry, this creates a twist.
+                    The algorithm has the two main components of a cube assembled from smaller cubes and an attraction point
+		    influencing the cubes geometry.
+		    The amount of cubes that the larger cube is assembled from, as well as their size, can be controlled by a slider.
+		    The attraction point has a maximum distance from which it influences the cubes. Inside of that distance,
+		    the cubes are pulled towards the attraction point, as well as scaled down. The closer the cubes are to the attraction point,
+		    the farther towards the attraction point they are translated relative to their previous position and the smaller they get.
+		    The Position of the attraction point is also controlleable by an integrated GUI and changes the Translation and scale
+		of the cubes trough an update loop.
                 </p>
                 <img src="../images/design_iterations.jpg" alt="Design Iterations">
             </section>
