@@ -45,8 +45,8 @@ def main():
         "size": 30,
         "amount": 5,
         "x": -150,
-        "y": 300,
-        "z": -150,
+        "y": -150,
+        "z": 300,
     }
 
     geom1_params = Object.fromEntries(to_js(geom1_params))
@@ -73,7 +73,7 @@ def main():
                 geom = THREE.BoxGeometry.new(geom1_params.size, geom1_params.size, geom1_params.size)
                 
                 #Create Vector for attractor point
-                attractor = THREE.Vector3.new(geom1_params.x-(x2*30),geom1_params.y-(y2*30),geom1_params.z-(z2*30))
+                attractor = THREE.Vector3.new(geom1_params.x-(x2*30),geom1_params.z-(y2*30),geom1_params.y-(z2*30))
                 attractor_len = attractor.length()               
 
                 #Get translation points for first translation
@@ -91,7 +91,7 @@ def main():
                 geom_pos_y = (y2*30)+trans_y
                 geom_pos_z = (z2*30)+trans_z
 
-                attractor_new = THREE.Vector3.new(geom1_params.x-geom_pos_x,geom1_params.y-geom_pos_y,geom1_params.z-geom_pos_z)
+                attractor_new = THREE.Vector3.new(geom1_params.x-geom_pos_x,geom1_params.z-geom_pos_y,geom1_params.y-geom_pos_z)
                 attractor_new_len = attractor_new.length()
 
                 #Scaling object, smaller when closer to attractor
@@ -104,7 +104,7 @@ def main():
                 geom = THREE.BoxGeometry.new(geom1_params.size*scale_vec, geom1_params.size*scale_vec, geom1_params.size*scale_vec)
 
                 #Create Vector for attractor point
-                attractor = THREE.Vector3.new(geom1_params.x-(x2*30),geom1_params.y-(y2*30),geom1_params.z-(z2*30))
+                attractor = THREE.Vector3.new(geom1_params.x-(x2*30),geom1_params.z-(y2*30),geom1_params.y-(z2*30))
                 attractor_len = attractor.length()
 
                
@@ -144,7 +144,7 @@ def main():
     gui = window.dat.GUI.new()
     param_folder = gui.addFolder('Parameters')
     param_folder.add(geom1_params, 'size', 5,30,1)
-    param_folder.add(geom1_params, 'amount', 2,100,1)
+    param_folder.add(geom1_params, 'amount', 1,15,1)
     param_folder.add(geom1_params,"x", -150,400,10)
     param_folder.add(geom1_params,"y", -150,400,10)
     param_folder.add(geom1_params,"z", -150,400,10)
@@ -180,7 +180,7 @@ def update_cubes():
                         geom = THREE.BoxGeometry.new(geom1_params.size, geom1_params.size, geom1_params.size)
                         
                         #Create Vector for attractor point
-                        attractor = THREE.Vector3.new(geom1_params.x-(x2*30),geom1_params.y-(y2*30),geom1_params.z-(z2*30))
+                        attractor = THREE.Vector3.new(geom1_params.x-(x2*30),geom1_params.z-(y2*30),geom1_params.y-(z2*30))
                         attractor_len = attractor.length()               
 
                         #Translating objects to radiate towards attractor point
@@ -198,7 +198,7 @@ def update_cubes():
                         geom_pos_y = (y2*30)+trans_y
                         geom_pos_z = (z2*30)+trans_z
 
-                        attractor_new = THREE.Vector3.new(geom1_params.x-geom_pos_x,geom1_params.y-geom_pos_y,geom1_params.z-geom_pos_z)
+                        attractor_new = THREE.Vector3.new(geom1_params.x-geom_pos_x,geom1_params.z-geom_pos_y,geom1_params.y-geom_pos_z)
                         attractor_new_len = attractor_new.length()
 
                         #Scaling object, smaller when closer to attractor
@@ -210,7 +210,7 @@ def update_cubes():
                         geom = THREE.BoxGeometry.new(geom1_params.size*scale_vec, geom1_params.size*scale_vec, geom1_params.size*scale_vec)
 
                         #Create Vector for attractor point
-                        attractor = THREE.Vector3.new(geom1_params.x-(x2*30),geom1_params.y-(y2*30),geom1_params.z-(z2*30))
+                        attractor = THREE.Vector3.new(geom1_params.x-(x2*30),geom1_params.z-(y2*30),geom1_params.y-(z2*30))
                         attractor_len = attractor.length()
 
                     
@@ -245,7 +245,7 @@ def update_cubes():
                 geom = THREE.BoxGeometry.new(geom1_params.size, geom1_params.size, geom1_params.size)
                 
                 #Create Vector for attractor point
-                attractor = THREE.Vector3.new(geom1_params.x-(x2*30),geom1_params.y-(y2*30),geom1_params.z-(z2*30))
+                attractor = THREE.Vector3.new(geom1_params.x-(x2*30),geom1_params.z-(y2*30),geom1_params.y-(z2*30))
                 attractor_len = attractor.length()               
 
                 #Translating objects to radiate towards attractor point
@@ -263,7 +263,7 @@ def update_cubes():
                 geom_pos_y = (y2*30)+trans_y
                 geom_pos_z = (z2*30)+trans_z
 
-                attractor_new = THREE.Vector3.new(geom1_params.x-geom_pos_x,geom1_params.y-geom_pos_y,geom1_params.z-geom_pos_z)
+                attractor_new = THREE.Vector3.new(geom1_params.x-geom_pos_x,geom1_params.z-geom_pos_y,geom1_params.y-geom_pos_z)
                 attractor_new_len = attractor_new.length()
 
                 #Scaling object, smaller when closer to attractor
@@ -275,7 +275,7 @@ def update_cubes():
                 geom = THREE.BoxGeometry.new(geom1_params.size*scale_vec, geom1_params.size*scale_vec, geom1_params.size*scale_vec)
 
                 #Create Vector for attractor point
-                attractor = THREE.Vector3.new(geom1_params.x-(x2*30),geom1_params.y-(y2*30),geom1_params.z-(z2*30))
+                attractor = THREE.Vector3.new(geom1_params.x-(x2*30),geom1_params.z-(y2*30),geom1_params.y-(z2*30))
                 attractor_len = attractor.length()
 
             
