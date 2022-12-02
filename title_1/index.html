@@ -14,9 +14,9 @@
             <a href="/" class="nav-link">
 				HOME</a>
 			<a href="./" class="nav-link">
-				Disintegrating Cube</a>
+				DISINTEGRATING CUBE</a>
 			<a href="../title_2" class="nav-link">
-				Mutable Koch-Snowflake</a>
+				MUTABLE KOCH SNOWFLAKE</a>
 		</nav>
 
         <main id="main-doc">
@@ -28,14 +28,13 @@
                     Project Description
                 </header>
                 <p>
-                    The algorithm has the two main components of a cube assembled from smaller cubes and an attraction point
-		    influencing the cubes geometry.
-		    The amount of cubes that the larger cube is assembled from, as well as their size, can be controlled by a slider.
-		    The attraction point has a maximum distance from which it influences the cubes. Inside of that distance,
-		    the cubes are pulled towards the attraction point, as well as scaled down. The closer the cubes are to the attraction point,
-		    the farther towards the attraction point they are translated relative to their previous position and the smaller they get.
-		    The Position of the attraction point is also controlleable by an integrated GUI and changes the Translation and scale
-		    of the cubes trough an update loop.
+                    The algorithm has the two main components of a cube assembled from smaller cubes and an attraction point<br />
+		    influencing the cubes geometry.<br />
+		    The amount of cubes that the larger cube is assembled from, as well as their size, can be controlled by a slider.<br />
+		    The attraction point has a maximum distance from which it influences the cubes. Inside of that distance,<br />
+		    the cubes are pulled towards the attraction point, as well as scaled down. The closer the cubes are to the attraction point,<br />
+		    the farther towards the attraction point they are translated relative to their previous position and the smaller they get.<br />
+		    With an integrated GUI the attraction points coordinates, aswell as the count and size of the cubes making up the bigger cube can be controlled.
                 </p>
                 <img src="../images/design_iterations.jpg" alt="Design Iterations">
             </section>
@@ -45,7 +44,11 @@
                     Algorithm
                 </header>
                 <p>
-                    Please explain a bit about the follwing flow-chart that describe your algorithm. The follwing is only a random flowchart as an example.
+                    The algorithms code is mainly split in three Parts: in the first part general base parameters are established, aswell as a dictionary which also contains the user input from the GUI.<br />
+		    The main part starts with three nested for-loops which create an three dimesional array of vectors. For each of the vectors a box is generated.<br />
+		    By calculating the distance between each individual cube and the attractor point, each cube can be translated towards the attractor point by an individual distance and in an individual direction.<br />
+		    Depending on the distance to the attractor point the cubes are also scaled down. Because the cubes have to be generated again for this, they are translated to their allocated position another time.<br />
+		    After that, the geometry can be visualized. The last part of the Code creates a feedback loop to constantly check wheter the geometry has been updated by GUI input, and updating the geometry accordingly.
                 </p>
                 <img src="../images/flowchart.png" alt="Algorithm FlowChart">
 
@@ -57,9 +60,10 @@
                 </header>
                 <body>
                     <p>
-                    Please add the instruction for using the app here. For example in this one, you can create control points that build a polygon by double clicking on the plane.  
+                    Klick and drag on the screen to turn or move the geometry! <br />
+		    Use the sliders to controll the amount of generated cubes, their size as well as the x,y and z coordinates of the attractor point.  
                     </p>
-                    <iframe class="responsive-iframe" src="../webapps/webapp_2.html"></iframe>
+                    <iframe class="responsive-iframe" src="../webapps/webapp_1.html"></iframe>
                     <p>
                         <br>
                     </p>
