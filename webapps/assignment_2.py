@@ -52,13 +52,12 @@ def main():
     new_vertices = []
     final_vertices = []
     #Starting geometry (eqilateral triangle)
-    help_vec = THREE.Vector3.new(0,0,1)
     ov1 = THREE.Vector3.new(0,5,0)
     ov2 = THREE.Vector3.new(4.33013,-2.5,0)
     ov3 = THREE.Vector3.new(-4.33013,-2.5,0)
-    new_vertices.append(ov1)
-    new_vertices.append(ov2)
-    new_vertices.append(ov3)
+    vertices.append(ov1)
+    vertices.append(ov2)
+    vertices.append(ov3)
 
     system(0, geom1_params.i)
 
@@ -173,10 +172,6 @@ def system(current_iteration, max_iteration):
 #Turning the generated point-list into a drawn line
 def draw_system(final_vertices):
     global vis_line
-    #Remove base geometry from list as it has been replaced by iterations
-    del final_vertices[2]
-    del final_vertices[1]
-    del final_vertices[0]
     #Draw geometry
     geom = THREE.BufferGeometry.new()
     final_vertices = to_js(final_vertices)
