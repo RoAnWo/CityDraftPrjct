@@ -1,7 +1,7 @@
 # Import javascript modules
 from js import THREE, window, document, Object, console
 # Import pyscript / pyodide modules
-from pyodide import create_proxy, to_js
+from pyodide.ffi import create_proxy, to_js
 # Import python module
 import math
 
