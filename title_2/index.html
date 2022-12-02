@@ -14,9 +14,9 @@
             <a href="/" class="nav-link">
 				HOME</a>
 			<a href="../title_1" class="nav-link">
-				TITLE1</a>
+				DISINTEGRATING CUBE</a>
 			<a href="./" class="nav-link">
-				TITLE2</a>
+				MUTABLE KOCH-SNOWFLAKE</a>
 		</nav>
 
         <main id="main-doc">
@@ -28,7 +28,15 @@
                     Project Description
                 </header>
                 <p>
-                    Please explain about your project here and put an image that shows some design iterations like the one below. Note that it needs to be one single image. Please combine some shots from different design iterations. The following text is only a random example. This geometry consists of rectangles spaced 1m apart along the x-axis. The rectangles have the same height and width but their orientation angle changes by a total of 90 degrees along the length of the resulting geometry, this creates a twist.
+                    The recursive algorithm shown here is based on that of a Koch-snowflake. The base-principle beeing that it starts with an<br />
+		    equilateral triangle and places another equilateral triangle in the middle third of every line with every iteration.<br />
+		    While doing so, the initial middle third of the original line is deleted and the outwards edge of the newly placed triangle<br />
+		    becomes part of the new circumference of the object. This leads to the interesting observation that the surface area<br />
+		    of the Koch snowflake is finite, while the circumference is infinite.<br />
+		    I experimented with the parameters for the snowflake and decided to not only let the algorithm place the new triangles on<br />
+		    the outside of the existing ones, but to have predefined vectors in the code that place the triangles on both sides of the base<br />
+		    geometry. With increasing iterations, this creates quite interesting patterns, and opens up the possibility to change the vectors<br />
+		    defined in the code to create an infinite amount of Koch-Snowflake inspired patterns.
                 </p>
                 <img src="../images/design_iterations.jpg" alt="Design Iterations">
             </section>
@@ -38,7 +46,15 @@
                     Algorithm
                 </header>
                 <p>
-                    Please explain a bit about the follwing flow-chart that describe your algorithm. The follwing is only a random flowchart as an example.
+                    The code for the variable Koch-Snowflake starts with the definition of different lists beeing used to store the point vectors during the iterative process<br />
+		    and a dictionary containing variables that can be altered to easily influence the structure. Also the start geometry, an eqilateral triangle, is created here.<br />
+		    From here the main three functions responsible for generating and displaying the geometry are called. The system-function mainly contains an if statement, <br />
+		    which calls the generate-function as long as the predefined maximum amount of iterations is not yet reached. Inside the generate-function the main part of the<br />
+		    geometry generation is happening. The function starts with a list of every point making up the existing lines. Now two neighbouring point-vectors <br />
+		    representing a line between them are paired together by an for-loop. For every single one of these point-pairs their connecting vector is now split into three parts<br />
+		    the middle part is taken out and insted a equilateral triangle with sides one third as long as the original connecting vector is placed here.<br />
+		    When the maximum amount of iterations is reached, a list containingf all the geometries points in te right order is sent to the draw-function which takes out the<br />
+		    original geometry still contained in the list and then generates a closed line through the generated points.
                 <br>
                 </p>
                 <img src="../images/flowchart.png" alt="Algorithm FlowChart">
@@ -50,7 +66,8 @@
                 </header>
                 <body>
                     <p>
-                    Please add the instruction for using the app here. For example in this one, you need to double click on the plane and existing voxel(s) to add a new one. 
+                    Klick and drag on the geometry to turn or move it, scroll to zoom in. This is 8 iterations of the afformentioned process.<br />
+		    A GUI to change the iterations and shape is currently in developement. 
                     </p>
                     <iframe class="responsive-iframe" src="../webapps/webapp_1.html"></iframe>
                 </body>
