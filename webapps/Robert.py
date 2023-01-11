@@ -1,5 +1,5 @@
 # Import javascript modules
-from js import THREE, window, document, Object
+from js import THREE, window, document, Object, console
 # Import pyscript / pyodide modules
 from pyodide.ffi import create_proxy, to_js
 # Import python module
@@ -11,7 +11,7 @@ def main():
     #-----------------------------------------------------------------------
     # VISUAL SETUP
     # Declare the variables
-    global renderer, scene, camera, controls, composer
+    global renderer, scene, camera, controls,composer
     
     #Set up the renderer
     renderer = THREE.WebGLRenderer.new()
@@ -21,10 +21,10 @@ def main():
 
     # Set up the scene
     scene = THREE.Scene.new()
-    back_color = THREE.Color.new("#cccfb3")
+    back_color = THREE.Color.new(0.1,0.1,0.1)
     scene.background = back_color
     camera = THREE.PerspectiveCamera.new(75, window.innerWidth/window.innerHeight, 0.1, 1000)
-    camera.position.z = 300
+    camera.position.z = 50
     scene.add(camera)
 
     # Graphic Post Processing
@@ -36,281 +36,159 @@ def main():
     window.addEventListener('resize', resize_proxy) 
     #-----------------------------------------------------------------------
     # YOUR DESIGN / GEOMETRY GENERATION
-    # Geometry Creation
-    # Declare Parameters
-    global geom1_params, cubes, cube_lines
-    cubes = []
-    cube_lines = []
+    global geom1_params
+
     geom1_params = {
-        "size": 30,
-        "amount": 5,
-        "x": -150,
-        "y": -150,
-        "z": 300,
+        "i": 1,
+        "size": 5
     }
 
     geom1_params = Object.fromEntries(to_js(geom1_params))
-
-    #Create Material
-    global material, line_material
-    color = THREE.Color.new("#33304c")
-    material = THREE.MeshBasicMaterial.new()
-    material.transparent = True
-    material.opacity = 1
-    material.color = color
-
-    line_material = THREE.LineBasicMaterial.new()
-    line_material.color = THREE.Color.new("#FA8072")
-
-
+    # Geometry Creation
     
-    #Generate the Boxes using for loops
-    for z2 in range(geom1_params.amount):
-        for y2 in range(geom1_params.amount):
-            for x2 in range(geom1_params.amount):
-                
-                #Create boxes
-                geom = THREE.BoxGeometry.new(geom1_params.size, geom1_params.size, geom1_params.size)
-                
-                #Create Vector for attractor point
-                attractor = THREE.Vector3.new(geom1_params.x-(x2*30),geom1_params.z-(y2*30),geom1_params.y-(z2*30))
-                attractor_len = attractor.length()               
+    global vertices, new_vertices, final_vertices
+    
+    vertices = []
+    new_vertices = []
+    final_vertices = []
+    #Starting geometry (eqilateral triangle)
+    ov1 = THREE.Vector3.new(0,5,0)
+    ov2 = THREE.Vector3.new(4.33013,-2.5,0)
+    ov3 = THREE.Vector3.new(-4.33013,-2.5,0)
+    vertices.append(ov1)
+    vertices.append(ov2)
+    vertices.append(ov3)
 
-                #Get translation points for first translation
-                if attractor_len < 350:
-                    attractor.setLength(attractor_len-(attractor_len/49.7)**3)
-                else:
-                    attractor.setLength(0)
-                
-                trans_x = attractor.getComponent(0)
-                trans_y = attractor.getComponent(1)
-                trans_z = attractor.getComponent(2)
-
-                #New distance from attractor point after translation
-                geom_pos_x = (x2*30)+trans_x
-                geom_pos_y = (y2*30)+trans_y
-                geom_pos_z = (z2*30)+trans_z
-
-                attractor_new = THREE.Vector3.new(geom1_params.x-geom_pos_x,geom1_params.z-geom_pos_y,geom1_params.y-geom_pos_z)
-                attractor_new_len = attractor_new.length()
-
-                #Scaling object, smaller when closer to attractor
-                if attractor_new_len < 350:
-                    scale_vec = 0.003*attractor_new_len+0.007
-                else:
-                    scale_vec = 1
-                
-                #Constructing Objects again using new scale
-                geom = THREE.BoxGeometry.new(geom1_params.size*scale_vec, geom1_params.size*scale_vec, geom1_params.size*scale_vec)
-
-                #Create Vector for attractor point
-                attractor = THREE.Vector3.new(geom1_params.x-(x2*30),geom1_params.z-(y2*30),geom1_params.y-(z2*30))
-                attractor_len = attractor.length()
-
-               
-                #Translating objects to radiate towards attractor point
-                if attractor_len < 350:
-                    attractor.setLength(attractor_len-(attractor_len/49.7)**3)
-                else:
-                    attractor.setLength(0)
-                
-                trans_x = attractor.getComponent(0)
-                trans_y = attractor.getComponent(1)
-                trans_z = attractor.getComponent(2)
-
-                geom.translate((x2*30)+trans_x,(y2*30)+trans_y,(z2*30)+trans_z)
-
-                #Adding objects to scene
-                cube = THREE.Mesh.new(geom, material)
-                cubes.append(cube)
-                scene.add(cube)
-
-                # draw the edge geometries of the cube
-                edges = THREE.EdgesGeometry.new( cube.geometry )
-                line = THREE.LineSegments.new( edges, line_material)
-                cube_lines.append(line)
-                scene.add( line )
+    system(0, geom1_params.i)
 
 
-
+    draw_system(final_vertices)
 
 
     #-----------------------------------------------------------------------
-    # USER INTERFACE
     # Set up Mouse orbit control
     controls = THREE.OrbitControls.new(camera, renderer.domElement)
 
-    # Set up GUI
-    gui = window.dat.GUI.new()
-    param_folder = gui.addFolder('Parameters')
-    param_folder.add(geom1_params, 'size', 5,30,1)
-    param_folder.add(geom1_params, 'amount', 1,10,1)
-    param_folder.add(geom1_params,"x", -150,400,10)
-    param_folder.add(geom1_params,"y", -150,400,10)
-    param_folder.add(geom1_params,"z", -150,400,10)
-    param_folder.open()
-    
     #-----------------------------------------------------------------------
     # RENDER + UPDATE THE SCENE AND GEOMETRIES
     render()
     
 #-----------------------------------------------------------------------
 # HELPER FUNCTIONS
-
-#Update the cube
-def update_cubes():
-    global cubes, cube_lines, material, line_material
-    
-    #make sure you dont have 0 cubes
-    if len(cubes) !=0:
-
-        #See if slider was moved, update whole process or just the geometry as a result
-        if len(cubes) != geom1_params.x:
-            for cube in cubes: scene.remove(cube)
-            for line in cube_lines: scene.remove(line)
-
-            cubes = []
-            cube_lines = []
-
-            for z2 in range(geom1_params.amount):
-                for y2 in range(geom1_params.amount):
-                    for x2 in range(geom1_params.amount):
-                        
-                        #Create Geometry
-                        geom = THREE.BoxGeometry.new(geom1_params.size, geom1_params.size, geom1_params.size)
-                        
-                        #Create Vector for attractor point
-                        attractor = THREE.Vector3.new(geom1_params.x-(x2*30),geom1_params.z-(y2*30),geom1_params.y-(z2*30))
-                        attractor_len = attractor.length()               
-
-                        #Translating objects to radiate towards attractor point
-                        if attractor_len < 350:
-                            attractor.setLength(attractor_len-(attractor_len/49.7)**3)
-                        else:
-                            attractor.setLength(0)
-                        
-                        trans_x = attractor.getComponent(0)
-                        trans_y = attractor.getComponent(1)
-                        trans_z = attractor.getComponent(2)
-
-                        #New distance from attractor point after translation
-                        geom_pos_x = (x2*30)+trans_x
-                        geom_pos_y = (y2*30)+trans_y
-                        geom_pos_z = (z2*30)+trans_z
-
-                        attractor_new = THREE.Vector3.new(geom1_params.x-geom_pos_x,geom1_params.z-geom_pos_y,geom1_params.y-geom_pos_z)
-                        attractor_new_len = attractor_new.length()
-
-                        #Scaling object, smaller when closer to attractor
-                        if attractor_new_len < 350:
-                            scale_vec = 0.003*attractor_new_len+0.007
-                        else:
-                            scale_vec = 1
-                        
-                        geom = THREE.BoxGeometry.new(geom1_params.size*scale_vec, geom1_params.size*scale_vec, geom1_params.size*scale_vec)
-
-                        #Create Vector for attractor point
-                        attractor = THREE.Vector3.new(geom1_params.x-(x2*30),geom1_params.z-(y2*30),geom1_params.y-(z2*30))
-                        attractor_len = attractor.length()
-
-                    
-                        #Translating objects to radiate towards attractor point
-                        if attractor_len < 350:
-                            attractor.setLength(attractor_len-(attractor_len/49.7)**3)
-                        else:
-                            attractor.setLength(0)
-                        
-                        trans_x = attractor.getComponent(0)
-                        trans_y = attractor.getComponent(1)
-                        trans_z = attractor.getComponent(2)
-
-                        geom.translate((x2*30)+trans_x,(y2*30)+trans_y,(z2*30)+trans_z)
-
-                        #Adding objects to scene
-                        cube = THREE.Mesh.new(geom, material)
-                        cubes.append(cube)
-                        scene.add(cube)
-
-                        # draw the edge geometries of the cube
-                        edges = THREE.EdgesGeometry.new( cube.geometry )
-                        line = THREE.LineSegments.new( edges, line_material)
-                        cube_lines.append(line)
-                        scene.add( line )
+# Rules for generating Geometry
+def generate():
+    #Take every Line and transform it to have equilateral triangle in the middle
+    for i in range(len(vertices)):
+        #Usual case scenario
+        if i < len(vertices)-1:
+            
+            vec_1 = vertices[i]
+            vec_2 = vertices[i+1]
+            temp1_vec = THREE.Vector3.new(0,0,0)
+            dir_vec = temp1_vec.subVectors(vec_2,vec_1)
+            dir_vec_l = dir_vec.length()
+            dir_vec_x = dir_vec.getComponent(0)
+            dir_vec_y = dir_vec.getComponent(1)
+            temp2_vec = THREE.Vector3.new(dir_vec_x,dir_vec_y,0)
+            temp3_vec = THREE.Vector3.new(dir_vec_x,dir_vec_y,0)
+            temp4_vec = THREE.Vector3.new(dir_vec_x,dir_vec_y,0)
+            dir_vec_1_3 = temp2_vec.setLength(dir_vec_l/3)
+            dir_vec_1_3_l = dir_vec_1_3.length()            
+            dir_vec_2_3 = temp3_vec.setLength(dir_vec_1_3_l*2)
+            dir_vec_1_2 = temp4_vec.setLength(dir_vec_l/2)
+            dir_x = dir_vec.getComponent(0)
+            dir_y = dir_vec.getComponent(1)
+            if dir_y != 0 and dir_x != 0:
+                orth_vec = THREE.Vector3.new(dir_x,(-dir_x*dir_x)/dir_y,0)
+            else:
+                orth_vec = THREE.Vector3.new(dir_y,dir_x,0)
+            orth_vec.setLength((dir_vec_1_3_l/2)*1.73205)
+            #Generate final points for new geometry
+            mid_p_vec = THREE.Vector3.new(0,0,0).addVectors(dir_vec_1_2,orth_vec)
+            draw_p_1 = THREE.Vector3.new(0,0,0).addVectors(vec_1,dir_vec_1_3)
+            draw_p_2 = THREE.Vector3.new(0,0,0).addVectors(vec_1,mid_p_vec)
+            draw_p_3 = THREE.Vector3.new(0,0,0).addVectors(vec_1,dir_vec_2_3)
+            
+            
+        #For the last point in list, which has to be paired up with the first of the list to create a closed line
         else:
-            for i in range(len(cubes)):
-                cube = cubes[i]
-                line = cube_lines[i]
-
-                 #Create Geometry
-                geom = THREE.BoxGeometry.new(geom1_params.size, geom1_params.size, geom1_params.size)
-                
-                #Create Vector for attractor point
-                attractor = THREE.Vector3.new(geom1_params.x-(x2*30),geom1_params.z-(y2*30),geom1_params.y-(z2*30))
-                attractor_len = attractor.length()               
-
-                #Translating objects to radiate towards attractor point
-                if attractor_len < 350:
-                    attractor.setLength(attractor_len-(attractor_len/49.7)**3)
-                else:
-                    attractor.setLength(0)
-                
-                trans_x = attractor.getComponent(0)
-                trans_y = attractor.getComponent(1)
-                trans_z = attractor.getComponent(2)
-
-                #New distance from attractor point after translation
-                geom_pos_x = (x2*30)+trans_x
-                geom_pos_y = (y2*30)+trans_y
-                geom_pos_z = (z2*30)+trans_z
-
-                attractor_new = THREE.Vector3.new(geom1_params.x-geom_pos_x,geom1_params.z-geom_pos_y,geom1_params.y-geom_pos_z)
-                attractor_new_len = attractor_new.length()
-
-                #Scaling object, smaller when closer to attractor
-                if attractor_new_len < 350:
-                    scale_vec = 0.003*attractor_new_len+0.007
-                else:
-                    scale_vec = 1
-                
-                geom = THREE.BoxGeometry.new(geom1_params.size*scale_vec, geom1_params.size*scale_vec, geom1_params.size*scale_vec)
-
-                #Create Vector for attractor point
-                attractor = THREE.Vector3.new(geom1_params.x-(x2*30),geom1_params.z-(y2*30),geom1_params.y-(z2*30))
-                attractor_len = attractor.length()
+            vec_1 = vertices[i]
+            vec_2 = vertices[i-(len(vertices)-1)]
+            temp1_vec = THREE.Vector3.new(0,0,0)
+            dir_vec = temp1_vec.subVectors(vec_2,vec_1)
+            dir_vec_l = dir_vec.length()
+            dir_vec_x = dir_vec.getComponent(0)
+            dir_vec_y = dir_vec.getComponent(1)
+            temp2_vec = THREE.Vector3.new(dir_vec_x,dir_vec_y,0)
+            temp3_vec = THREE.Vector3.new(dir_vec_x,dir_vec_y,0)
+            temp4_vec = THREE.Vector3.new(dir_vec_x,dir_vec_y,0)
+            dir_vec_1_3 = temp2_vec.setLength(dir_vec_l/3)
+            dir_vec_1_3_l = dir_vec_1_3.length()            
+            dir_vec_2_3 = temp3_vec.setLength(dir_vec_1_3_l*2)
+            dir_vec_1_2 = temp4_vec.setLength(dir_vec_l/2)
+            dir_x = dir_vec.getComponent(0)
+            dir_y = dir_vec.getComponent(1)
+            if dir_y != 0 and dir_x != 0:
+                orth_vec = THREE.Vector3.new(dir_x,(-dir_x*dir_x)/dir_y,0)
+            else:
+                orth_vec = THREE.Vector3.new(dir_y,dir_x,0)
+            orth_vec.setLength((dir_vec_1_3_l/2)*1.73205)
+            #Generate final points for new geometry
+            mid_p_vec = THREE.Vector3.new(0,0,0).addVectors(dir_vec_1_2,orth_vec)
+            draw_p_1 = THREE.Vector3.new(0,0,0).addVectors(vec_1,dir_vec_1_3)
+            draw_p_2 = THREE.Vector3.new(0,0,0).addVectors(vec_1,mid_p_vec)
+            draw_p_3 = THREE.Vector3.new(0,0,0).addVectors(vec_1,dir_vec_2_3)
 
             
-                #Translating objects to radiate towards attractor point
-                if attractor_len < 350:
-                    attractor.setLength(attractor_len-(attractor_len/49.7)**3)
-                else:
-                    attractor.setLength(0)
-                
-                trans_x = attractor.getComponent(0)
-                trans_y = attractor.getComponent(1)
-                trans_z = attractor.getComponent(2)
+            
 
-                geom.translate((x2*30)+trans_x,(y2*30)+trans_y,(z2*30)+trans_z)
-
-                #Adding objects to scene
-                cube = THREE.Mesh.new(geom, material)
-                cubes.append(cube)
-                scene.add(cube)
-
-                # draw the edge geometries of the cube
-                edges = THREE.EdgesGeometry.new( cube.geometry )
-                line = THREE.LineSegments.new( edges, line_material)
-                cube_lines.append(line)
-                scene.add( line )
+        #Add newly generated points to second helper-list
+        new_vertices.append(vec_1)
+        new_vertices.append(draw_p_1)
+        new_vertices.append(draw_p_2)
+        new_vertices.append(draw_p_3)
+    
+    #Add newly generated points to first helper-list as preparation for new iteration
+    vertices.clear()
+    vertices.extend(new_vertices)
 
 
+        
+#Recursive function which runs the generation-function as long as the max generation number isn't reached
+def system(current_iteration, max_iteration):
+    global vertices, new_vertices, final_vertices
+    
+    current_iteration += 1
+    
+    generate()
+    #When threshhold of max generations is reached: second temporary point-list is added to final list
+    if current_iteration >= max_iteration:
+        final_vertices.extend(new_vertices)
+        return final_vertices
+    else:
+        new_vertices.clear()
+        return system(current_iteration, max_iteration)
+    
+#Turning the generated point-list into a drawn line
+def draw_system(final_vertices):
+    global vis_line
+    #Draw geometry
+    geom = THREE.BufferGeometry.new()
+    final_vertices = to_js(final_vertices)
+    geom.setFromPoints(final_vertices)
+    material = THREE.LineBasicMaterial.new( THREE.Color.new(0x0000ff))
+    vis_line = THREE.LineLoop.new( geom, material )
+
+    global scene
+    scene.add(vis_line)
 
 
+#Space for potential GUI- might be added later (still WIP)!
 
 
 # Simple render and animate
 def render(*args):
     window.requestAnimationFrame(create_proxy(render))
-    update_cubes()
     controls.update()
     composer.render()
 
