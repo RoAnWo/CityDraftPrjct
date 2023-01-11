@@ -39,7 +39,7 @@ def main():
     global geom1_params
 
     geom1_params = {
-        "i": 6,
+        "i": 1,
         "size": 5
     }
 
